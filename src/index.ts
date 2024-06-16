@@ -292,6 +292,11 @@ export const $intersection = <Vs extends Validator<unknown>[]>(
  * @template Vs - An array of validator functions.
  * @param {readonly [...Vs]} validators - An array of validator functions.
  * @returns {Validator<Infer<Vs[number]>>} A validator function that checks if a value matches any of the provided validators.
+ * @example
+ * const validator = $union([$string, $number]);
+ * console.log(validator("test")); // true
+ * console.log(validator(123)); // true
+ * console.log(validator(true)); // false
  */
 export const $union = <Vs extends Validator<unknown>[]>(
   validators: readonly [...Vs],
