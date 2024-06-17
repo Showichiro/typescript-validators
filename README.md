@@ -2,6 +2,9 @@
 
 A module providing validators with type guard.
 
+[![codecov](https://codecov.io/gh/Showichiro/typescript-validators/graph/badge.svg?token=L6ZI8MIAPT)](https://codecov.io/gh/Showichiro/typescript-validators)
+[![JSR](https://jsr.io/badges/@showichiro/validators)](https://jsr.io/@showichiro/validators)
+
 ```ts
  import {
  type Validator,
