@@ -13,6 +13,7 @@ A module providing validators with type guard.
  type Infer,
  $const,
  $number,
+ $numberRange,
  $string,
  $numericString,
  $null,
@@ -44,6 +45,19 @@ A module providing validators with type guard.
  // $number
  console.log($number(1)); // true
  console.log($number("1")); // false
+ 
+ // $numberRange
+ const rangeValidator = $numberRange({ min: 10, max: 20 });
+ console.log(rangeValidator(15)); // true
+ console.log(rangeValidator(25)); // false
+
+ const minOnlyValidator = $numberRange({ min: 10 });
+ console.log(minOnlyValidator(15)); // true
+ console.log(minOnlyValidator(5)); // false
+
+ const maxOnlyValidator = $numberRange({ max: 20 });
+ console.log(maxOnlyValidator(15)); // true
+ console.log(maxOnlyValidator(25)); // false
 
  // $string
  console.log($string("hello")); // true

@@ -58,6 +58,34 @@ export const $number: Validator<number> = (val): val is number => {
   return typeof val === "number";
 };
 
+type NumberRangeArgs = { min?: number; max?: number };
+
+/**
+ * Creates a validator for checking if a number falls within a specified range.
+ * @param {NumberRangeArgs} param - The range arguments containing min and/or max values.
+ * @returns {Validator<number>} A validator function that checks if a number falls within the specified range.
+ * @example
+ * const rangeValidator = $numberRange({ min: 10, max: 20 });
+ * console.log(rangeValidator(15)); // true
+ * console.log(rangeValidator(25)); // false
+ * @example
+ * const minOnlyValidator = $numberRange({ min: 10 });
+ * console.log(minOnlyValidator(15)); // true
+ * console.log(minOnlyValidator(5)); // false
+ * @example
+ * const maxOnlyValidator = $numberRange({ max: 20 });
+ * console.log(maxOnlyValidator(15)); // true
+ * console.log(maxOnlyValidator(25)); // false
+ */
+export const $numberRange =
+  ({ min, max }: NumberRangeArgs): Validator<number> =>
+  (
+    val,
+  ): val is number => {
+    return $number(val) && (!$number(min) || min <= val) &&
+      (!$number(max) || max >= val);
+  };
+
 /**
  * A type guard that checks if a value is of type string.
  * @returns {val is string} True if the value is a string, false otherwise.
