@@ -11,6 +11,7 @@ import {
   $null,
   $nullable,
   $number,
+  $numberRange,
   $numericString,
   $object,
   $optional,
@@ -326,4 +327,31 @@ Deno.test("$tuple", () => {
   assert(!tupleValidator(["test", "123", true]));
   assert(!tupleValidator([123, "test", true]));
   assert(!tupleValidator([true, 123, "test"]));
+});
+
+Deno.test("$numberRange", () => {
+  const rangeValidator = $numberRange({ min: 10, max: 20 });
+  assert(!rangeValidator(1));
+  assert(!rangeValidator(9));
+  assert(rangeValidator(10));
+  assert(rangeValidator(11));
+  assert(rangeValidator(19));
+  assert(rangeValidator(20));
+  assert(!rangeValidator(21));
+  assert(!rangeValidator(30));
+  assert(!rangeValidator(undefined));
+
+  const minOnlyValidator = $numberRange({ min: 10 });
+  assert(!minOnlyValidator(1));
+  assert(!minOnlyValidator(9));
+  assert(minOnlyValidator(10));
+  assert(minOnlyValidator(11));
+  assert(!minOnlyValidator(undefined));
+
+  const maxOnlyValidator = $numberRange({ max: 20 });
+  assert(maxOnlyValidator(19));
+  assert(maxOnlyValidator(20));
+  assert(!maxOnlyValidator(21));
+  assert(!maxOnlyValidator(30));
+  assert(!maxOnlyValidator(undefined));
 });
