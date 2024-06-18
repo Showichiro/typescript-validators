@@ -415,6 +415,44 @@ export const $array = <
   return fn;
 };
 
+type ArrayLengthArgs<T extends Validator<unknown>> = {
+  min?: number;
+  max?: number;
+  child: T;
+};
+
+/**
+ * Creates a validator for an array with length constraints.
+ * @template T - The type of the array elements.
+ * @param {ArrayLengthArgs} param - The parameters for the array length constraint.
+ * @param {number} [param.max] - The maximum length of the array.
+ * @param {number} [param.min] - The minimum length of the array.
+ * @param {T} [param.child] - A validator for the type of the array elements.
+ * @returns {Validator<Infer<T>[]>} - A validator that checks if the array meets the constraints.
+ * @example
+ * const lengthValidator = $arrayLength({ min: 2, max: 4, child: $number });
+ * console.log(lengthValidator([1, 2, 3])); // true
+ * console.log(lengthValidator([1])); // false
+ * console.log(lengthValidator([1, 2, 3, 4, 5])); // false
+ * @example
+ * const minOnlyValidator = $arrayLength({ min: 2, child: $number });
+ * console.log(minOnlyValidator([1, 2, 3])); // true
+ * console.log(minOnlyValidator([1])); // false
+ * @example
+ * const maxOnlyValidator = $arrayLength({ max: 4, child: $number });
+ * console.log(maxOnlyValidator([1, 2, 3])); // true
+ * console.log(maxOnlyValidator([1, 2, 3, 4, 5])); // false
+ */
+export const $arrayLength = <T extends Validator<unknown>>(
+  { max, min, child }: ArrayLengthArgs<T>,
+): Validator<Infer<T>[]> => {
+  return (val): val is Infer<T>[] => {
+    const arrayValidator = $array(child);
+    return arrayValidator(val) && (min === undefined || val.length >= min) &&
+      (max === undefined || val.length <= max);
+  };
+};
+
 /**
  * A type guard that checks if values in an object adhere to a specific validator.
  * @template T - The validator type.
