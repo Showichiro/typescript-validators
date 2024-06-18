@@ -14,3 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npx jsr publish
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         export TAG_NAME=$(cat deno.json | grep "\"version\"" | awk -F'"' '{print $(NF-1)}')
+         if [! "$(git tag -l ${TAG_NAME})" ]; then
+          echo "Creating tag: ${TAG_NAME}"
+          git tag "${TAG_NAME}"
+          git push origin "${TAG_NAME}"
+         else
+            echo "Tag '${TAG_NAME}' already exists."
+         fi
