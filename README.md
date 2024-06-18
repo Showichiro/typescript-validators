@@ -33,6 +33,7 @@ A module providing validators with type guard.
  $union,
  $object,
  $array,
+ $arrayLength,
  $record,
  $tuple
  } from "@showichiro/validators";
@@ -153,6 +154,20 @@ A module providing validators with type guard.
  const numberArray = $array($number);
  console.log(numberArray([1, 2, 3])); // true
  console.log(numberArray([1, "2", 3])); // false
+
+ // $arrayLength
+ const lengthValidator = $arrayLength({ min: 2, max: 4, child: $number });
+ console.log(lengthValidator([1, 2, 3])); // true
+ console.log(lengthValidator([1])); // false
+ console.log(lengthValidator([1, 2, 3, 4, 5])); // false
+
+ const minOnlyValidator = $arrayLength({ min: 2, child: $number });
+ console.log(minOnlyValidator([1, 2, 3])); // true
+ console.log(minOnlyValidator([1])); // false
+
+ const maxOnlyValidator = $arrayLength({ max: 4, child: $number });
+ console.log(maxOnlyValidator([1, 2, 3])); // true
+ console.log(maxOnlyValidator([1, 2, 3, 4, 5])); // false
 
  // $record
  const stringRecord = $record($string);
