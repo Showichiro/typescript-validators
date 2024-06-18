@@ -2,6 +2,7 @@ import { assert } from "jsr:@std/assert@^0.226.0/assert";
 import {
   $any,
   $array,
+  $arrayLength,
   $bigint,
   $boolean,
   $const,
@@ -354,4 +355,32 @@ Deno.test("$numberRange", () => {
   assert(!maxOnlyValidator(21));
   assert(!maxOnlyValidator(30));
   assert(!maxOnlyValidator(undefined));
+});
+
+Deno.test("$arrayLength", () => {
+  const minMaxValidator = $arrayLength({ min: 2, max: 4, child: $number });
+  assert(!minMaxValidator([1]));
+  assert(minMaxValidator([1, 2]));
+  assert(minMaxValidator([1, 2, 3]));
+  assert(minMaxValidator([1, 2, 3, 4]));
+  assert(!minMaxValidator([1, 2, 3, 4, 5]));
+  assert(!minMaxValidator(["1", 2, 3, 4, 5]));
+  assert(!minMaxValidator("1"));
+  assert(!minMaxValidator(undefined));
+
+  const minOnlyValidator = $arrayLength({ min: 2, child: $number });
+  assert(!minOnlyValidator([1]));
+  assert(minOnlyValidator([1, 2]));
+  assert(minOnlyValidator([1, 2, 3]));
+  assert(!minMaxValidator(["1", 2, 3, 4, 5]));
+  assert(!minMaxValidator("1"));
+  assert(!minMaxValidator(undefined));
+
+  const maxOnlyValidator = $arrayLength({ max: 4, child: $number });
+  assert(maxOnlyValidator([1, 2, 3]));
+  assert(maxOnlyValidator([1, 2, 3, 4]));
+  assert(!maxOnlyValidator([1, 2, 3, 4, 5]));
+  assert(!minMaxValidator(["1", 2, 3, 4, 5]));
+  assert(!minMaxValidator("1"));
+  assert(!minMaxValidator(undefined));
 });
